@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { CHAIN_INFO } from 'constants/chains'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { updateBlockNumber, updateChainId } from './actions'
+import { setChainConnectivityWarning, updateBlockNumber, updateChainId } from './actions'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -20,6 +21,9 @@ function useQueryCacheInvalidator() {
   }, [chainId, dispatch])
 }
 
+const NETWORK_HEALTH_CHECK_SECONDS = 15
+const DEFAULT_SECONDS_BEFORE_WARNING_WAIT = 10 * 60
+
 export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
@@ -33,11 +37,13 @@ export default function Updater(): null {
 
   useQueryCacheInvalidator()
 
+  const [secondsSinceLastBlock, setSecondsSinceLastBlock] = useState(0)
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {
       setState((state) => {
         if (chainId === state.chainId) {
           if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
+          setSecondsSinceLastBlock(0)
           return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
         }
         return state
@@ -45,6 +51,27 @@ export default function Updater(): null {
     },
     [chainId, setState]
   )
+
+  const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainconnectivityWarning)
+  const timeout = useRef<NodeJS.Timeout>()
+  useEffect(() => {
+    const waitMSBeforeWarning =
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMSBeforeWarning : DEFAULT_SECONDS_BEFORE_WARNING_WAIT) ||
+      DEFAULT_SECONDS_BEFORE_WARNING_WAIT
+    timeout.current = setTimeout(() => {
+      setSecondsSinceLastBlock(NETWORK_HEALTH_CHECK_SECONDS + secondsSinceLastBlock)
+      if (secondsSinceLastBlock > waitMSBeforeWarning) {
+        dispatch(setChainConnectivityWarning({ warn: true }))
+      } else if (chainConnectivityWarningActive) {
+        dispatch(setChainConnectivityWarning({ warn: false }))
+      }
+    }, NETWORK_HEALTH_CHECK_SECONDS * 1000)
+    return function cleanup() {
+      if (timeout.current) {
+        clearTimeout(timeout.current)
+      }
+    }
+  }, [chainId, chainConnectivityWarningActive, dispatch, secondsSinceLastBlock])
 
   // attach/detach listeners
   useEffect(() => {
