@@ -168,11 +168,11 @@ export function NetworkAlert() {
         </Header>
         <Body>
           <Trans>
-            This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
-            swap them.
+            Uniswap is now live on the Optimistic Ethereum (OΞ) layer 2 network. Trade with low fees and near-instant
+            confirmation transactions. To get started, deposit assets from layer 1 Ethereum to OΞ.
           </Trans>{' '}
           <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
-            <Trans>Read more</Trans>
+            <Trans>Learn how</Trans>
           </ReadMoreLink>
         </Body>
       </ContentWrapper>

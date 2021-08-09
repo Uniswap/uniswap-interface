@@ -22,12 +22,6 @@ const L2Icon = styled.img`
     display: block;
   }
 `
-const DesktopTextBreak = styled.div`
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: block;
-  }
-`
 const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
@@ -40,6 +34,7 @@ const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; log
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  max-width: 880px;
   overflow: hidden;
   padding: 12px;
   position: relative;
@@ -96,7 +91,7 @@ const LinkOutToBridge = styled(ExternalLink)`
     background-color: black;
   }
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    margin: auto 0 auto auto;
+    margin: auto 0 auto 12px;
     padding: 14px 16px;
     min-width: 226px;
   }
@@ -117,10 +112,12 @@ export function AddLiquidityNetworkAlert() {
     <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
       <L2Icon src={info.logoUrl} />
       <Body>
-        <Trans>This is an alpha release of Uniswap on the {info.label} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>{' '}
+        <Trans>
+          Uniswap is now live on the Optimistic Ethereum (OΞ) layer 2 network. Trade with low fees and near-instant
+          confirmation transactions. To get started, deposit assets from layer 1 Ethereum to OΞ.
+        </Trans>{' '}
         <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
-          <Trans>Read more</Trans>
+          <Trans>Learn how</Trans>
         </ReadMoreLink>
       </Body>
       <LinkOutToBridge href={depositUrl}>
