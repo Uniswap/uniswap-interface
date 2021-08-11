@@ -10,7 +10,6 @@ import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { X } from 'react-feather'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -250,7 +249,7 @@ https://help.uniswap.org/en/collections/3033942-layer-2"
     <SelectorWrapper ref={node as any}>
       <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
         <SelectorLogo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
-        <SelectorLabel>{info.label}</SelectorLabel>
+        <SelectorLabel>{info.shortLabel ? info.shortLabel : info.label}</SelectorLabel>
         {showSelector && <StyledChevronDown />}
       </SelectorControls>
       {open && (

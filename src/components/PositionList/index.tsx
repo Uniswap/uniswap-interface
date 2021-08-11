@@ -4,10 +4,12 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
+import { useUserHideClosedPositions } from 'state/user/hooks'
+import { TYPE } from 'theme'
 
 const DesktopHeader = styled.div`
   display: none;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   padding: 8px;
 
@@ -16,10 +18,9 @@ const DesktopHeader = styled.div`
     display: flex;
 
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
     & > div:last-child {
       text-align: right;
-      margin-right: 12px;
     }
   }
 `
@@ -34,11 +35,25 @@ const MobileHeader = styled.div`
   }
 `
 
+const ShowInactiveToggle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-items: end;
+  align-self: flex-end;
+  grid-column-gap: 4px;
+  padding: 0 8px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-bottom: 12px;
+  `};
+`
+
 type PositionListProps = React.PropsWithChildren<{
   positions: PositionDetails[]
 }>
 
 export default function PositionList({ positions }: PositionListProps) {
+  const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
+
   return (
     <>
       <DesktopHeader>
@@ -46,9 +61,18 @@ export default function PositionList({ positions }: PositionListProps) {
           <Trans>Your positions</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
-        <div>
-          <Trans>Status</Trans>
-        </div>
+        <ShowInactiveToggle>
+          <label>
+            <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
+              <Trans>Show closed positions</Trans>
+            </TYPE.body>
+          </label>
+          <input
+            type="checkbox"
+            onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
+            checked={!userHideClosedPositions}
+          />
+        </ShowInactiveToggle>
       </DesktopHeader>
       <MobileHeader>
         <Trans>Your positions</Trans>

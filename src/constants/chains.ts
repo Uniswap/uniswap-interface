@@ -52,6 +52,7 @@ export interface L1ChainInfo {
   readonly explorer: string
   readonly infoLink: string
   readonly label: string
+  readonly shortLabel?: string
   readonly logoUrl?: string
   readonly rpcUrls?: string[]
   readonly nativeCurrency: {
@@ -63,6 +64,7 @@ export interface L1ChainInfo {
 export interface L2ChainInfo extends L1ChainInfo {
   readonly bridge: string
   readonly logoUrl: string
+  readonly shortLabel?: string
 }
 
 export type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
@@ -76,7 +78,8 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://explorer.offchainlabs.com/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
-    label: 'Arbitrum',
+    label: 'Arbitrum One',
+    shortLabel: `Arbitrum`,
     logoUrl: arbitrumLogoUrl,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
@@ -132,7 +135,8 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
-    label: 'OΞ',
+    label: 'Optimistic Ethereum',
+    shortLabel: `OΞ`,
     logoUrl: optimismLogoUrl,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],

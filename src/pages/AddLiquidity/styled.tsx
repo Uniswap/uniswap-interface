@@ -8,8 +8,6 @@ export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
   max-width: ${({ wide }) => (wide ? '880px' : '480px')};
   width: 100%;
 
-  padding: ${({ wide }) => (wide ? '10px' : '0')};
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 480px;
   `};

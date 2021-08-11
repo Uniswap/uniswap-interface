@@ -6,33 +6,22 @@ import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
-import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, HideSmall } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
 import { ReadMoreLink } from './styles'
 
-const L2Icon = styled.img`
-  width: 40px;
-  height: 40px;
-  justify-self: center;
-`
 const CloseIcon = styled(X)`
   cursor: pointer;
   position: absolute;
   top: 16px;
   right: 16px;
-`
-const ContentWrapper = styled.div`
-  align-items: center;
-  display: grid;
-  grid-gap: 4px;
-  grid-template-columns: 40px 4fr;
-  grid-template-rows: auto auto;
-  margin: 20px 16px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-template-columns: 42px 4fr;
-    grid-gap: 8px;
+  opacity: 0.6;
+
+  :hover {
+    opacity: 1;
   }
 `
+
 export const ArbitrumWrapperBackgroundDarkMode = css`
   background: radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),
     radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.3) 0%, rgba(33, 114, 229, 0.3) 100%), hsla(0, 0%, 100%, 0.1);
@@ -43,13 +32,14 @@ export const ArbitrumWrapperBackgroundLightMode = css`
 `
 export const OptimismWrapperBackgroundDarkMode = css`
   background: radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%),
-    radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.5) 0%, rgba(235, 0, 255, 0.345) 96%);
+    radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.2) 0%, rgba(235, 0, 255, 0.2) 96%);
 `
 export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
-    radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
+    radial-gradient(100% 97% at 0% 12%, rgba(236, 162, 243, 0.2) 0%, rgba(243, 19, 19, 0.2) 100%),
+    hsla(0, 0%, 100%, 0.5);
 `
-const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string; wide: boolean }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -60,12 +50,13 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
       : ArbitrumWrapperBackgroundLightMode};
   border-radius: 20px;
   display: flex;
-  flex-direction: column;
-  max-width: 480px;
-  min-height: 174px;
+  flex-direction: ${({ wide }) => (wide ? 'row' : 'column')};
+  max-width: ${({ wide }) => (wide ? '880px' : '480px')};
   overflow: hidden;
   position: relative;
   width: 100%;
+  padding: 1.25rem;
+  margin-bottom: 12px;
 
   :before {
     background-image: url(${({ logoUrl }) => logoUrl});
@@ -80,46 +71,57 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
     z-index: -1;
   }
 `
-const Header = styled.h2`
-  font-weight: 600;
-  font-size: 20px;
-  margin: 0;
-  padding-right: 30px;
+const Header = styled.h1`
+  margin: 0rem 0 1rem 0rem;
+  font-size: 1.5rem;
+  margin-right: 48px;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 1.25rem;
+    margin-right: 24px;
+  `};
 `
-const BodyWrapper = styled.p`
-  font-size: 12px;
-  grid-column: 1 / 3;
+
+const Body = styled.div`
+  font-size: 16px;
   line-height: 143%;
-  margin: 0;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-column: 2 / 3;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
+
+const Copy = styled.div<{ wide: boolean }>`
+  margin: ${({ wide }) => (wide ? '0 1rem 0.5rem 0' : '0 0 0.5rem 0')};
+`
+
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 20px;
   height: 20px;
 `
-const LinkOutToBridge = styled(ExternalLink)`
+const LinkOutToBridge = styled(ExternalLink)<{ darkMode: boolean }>`
   align-items: center;
-  background-color: black;
-  border-radius: 16px;
-  color: white;
+  border-radius: 12px;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ darkMode }) => (darkMode ? `rgba(255, 255, 255, 0.1)` : `rgba(0, 0, 0, 0.05)`)};
+  border: 1px solid ${({ darkMode }) => (darkMode ? `rgba(255, 255, 255, 0.2 )` : `rgba(0, 0, 0, 0.2)`)};
+
   display: flex;
   font-size: 16px;
   height: 44px;
   justify-content: space-between;
-  margin: 0 20px 20px 20px;
+  margin-top: 16px;
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
+
   :hover,
   :focus,
   :active {
-    background-color: black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    text-decoration: none !important;
   }
 `
-export function NetworkAlert() {
+export function NetworkAlert({ wide }: { wide: boolean }) {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
@@ -158,43 +160,30 @@ export function NetworkAlert() {
     ? `${info.bridge}?chainId=1`
     : info.bridge
 
-  function Body() {
-    return (
-      <BodyWrapper>
-        {chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId) ? (
-          <>
-            <Trans>
-              Uniswap is now live on the Optimistic Ethereum (OΞ) network. Trade with low fees and nearly instant
-              transaction times on Layer 2. To get started, deposit assets from Ethereum to OΞ.
-            </Trans>{' '}
-            <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
-              <Trans>Learn how</Trans>
-            </ReadMoreLink>
-          </>
-        ) : (
-          <div>
-            TODO: write some body text that tells people about Arbitrum&rsquo;s utility and links them to more info
-            about how to get started using it.
-          </div>
-        )}
-      </BodyWrapper>
-    )
-  }
-
   return (
-    <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
+    <RootWrapper wide={wide} chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
-      <ContentWrapper>
-        <L2Icon src={info.logoUrl} />
-        <Header>
-          <Trans>Uniswap on {info.label}</Trans>
-        </Header>
-        <Body />
-      </ContentWrapper>
-      <LinkOutToBridge href={depositUrl}>
-        <Trans>Deposit to {info.label}</Trans>
-        <LinkOutCircle />
-      </LinkOutToBridge>
+      <Header>Welcome to Uniswap on {info.label}.</Header>
+      <Body>
+        <Copy wide={wide}>
+          <Trans>
+            Trade with low fees and nearly instant transaction times. To get started, deposit assets from Ethereum to{' '}
+            {info.shortLabel}.
+          </Trans>
+          <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+            <Trans>Learn how</Trans>
+          </ReadMoreLink>
+        </Copy>
+        <LinkOutToBridge darkMode={darkMode} href={depositUrl}>
+          <span>
+            <Trans>
+              Deposit to <HideSmall>{info.label}</HideSmall>
+              {info.shortLabel ? ` (${info.shortLabel})` : ''}
+            </Trans>
+          </span>
+          <LinkOutCircle />
+        </LinkOutToBridge>
+      </Body>
     </RootWrapper>
   )
 }

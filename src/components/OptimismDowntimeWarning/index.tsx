@@ -3,16 +3,17 @@ import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ExternalLink } from 'theme'
+import { ExternalLink, HideSmall } from 'theme'
 
 const Root = styled.div`
   background-color: ${({ theme }) => theme.yellow3};
   border-radius: 18px;
-  color: black;
+  color: rgb(0, 0, 0);
   margin-top: 16px;
-  padding: 16px;
+  padding: 24px;
   width: 100%;
   max-width: 880px;
+  margin-bottom: 16px;
 `
 const WarningIcon = styled(AlertOctagon)`
   margin: 0 8px 0 0;
@@ -28,8 +29,7 @@ const TitleRow = styled.div`
   line-height: 25px;
 `
 const Body = styled.div`
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 16px;
   margin: 8px 0 0 0;
 `
 const ReadMoreLink = styled(ExternalLink)`
@@ -46,7 +46,10 @@ export default function OptimismDowntimeWarning() {
   return (
     <Root>
       <TitleRow>
-        <WarningIcon />
+        <HideSmall>
+          {' '}
+          <WarningIcon />
+        </HideSmall>
         <Trans>Optimism Planned Downtime</Trans>
       </TitleRow>
       <Body>
