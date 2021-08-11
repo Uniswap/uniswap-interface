@@ -1,19 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
-import { STAKING_GENESIS, REWARDS_DURATION_DAYS } from '../../state/stake/hooks'
-import { TYPE } from '../../theme'
+import { useEffect, useState } from 'react'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS
 
-export function Countdown({ exactEnd }: { exactEnd?: Date }) {
+export default function useCountdownTime(startTime: Date, endTime: Date, includeSeconds = false): string {
   // get end/beginning times
-  const end = useMemo(
-    () => (exactEnd ? Math.floor(exactEnd.getTime() / 1000) : STAKING_GENESIS + REWARDS_DURATION),
-    [exactEnd]
-  )
-  const begin = useMemo(() => end - REWARDS_DURATION, [end])
+  const begin = Math.floor(startTime.getTime() / 1000)
+  const end = Math.floor(endTime.getTime() / 1000)
 
   // get current time
   const [time, setTime] = useState(() => Math.floor(Date.now() / 1000))
@@ -31,17 +25,13 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   const timeUntilEnd = end - time
 
   let timeRemaining: number
-  let message: string
   if (timeUntilGenesis >= 0) {
-    message = 'Rewards begin in'
     timeRemaining = timeUntilGenesis
   } else {
     const ongoing = timeUntilEnd >= 0
     if (ongoing) {
-      message = 'Rewards end in'
       timeRemaining = timeUntilEnd
     } else {
-      message = 'Rewards have ended!'
       timeRemaining = Infinity
     }
   }
@@ -54,16 +44,7 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   timeRemaining -= minutes * MINUTE
   const seconds = timeRemaining
 
-  return (
-    <TYPE.black fontWeight={400}>
-      {message}{' '}
-      {Number.isFinite(timeRemaining) && (
-        <code>
-          {`${days}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
-            .toString()
-            .padStart(2, '0')}`}
-        </code>
-      )}
-    </TYPE.black>
-  )
+  return `Starts in ${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${
+    includeSeconds ? seconds.toString().padStart(2, '0') : ''
+  }`
 }
