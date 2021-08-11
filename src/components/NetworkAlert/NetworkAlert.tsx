@@ -86,7 +86,7 @@ const Header = styled.h2`
   margin: 0;
   padding-right: 30px;
 `
-const Body = styled.p`
+const BodyWrapper = styled.p`
   font-size: 12px;
   grid-column: 1 / 3;
   line-height: 143%;
@@ -158,6 +158,29 @@ export function NetworkAlert() {
     ? `${info.bridge}?chainId=1`
     : info.bridge
 
+  function Body() {
+    return (
+      <BodyWrapper>
+        {chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId) ? (
+          <>
+            <Trans>
+              Uniswap is now live on the Optimistic Ethereum (OΞ) network. Trade with low fees and nearly instant
+              transaction times on Layer 2. To get started, deposit assets from Ethereum to OΞ.
+            </Trans>{' '}
+            <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+              <Trans>Learn how</Trans>
+            </ReadMoreLink>
+          </>
+        ) : (
+          <div>
+            TODO: write some body text that tells people about Arbitrum&rsquo;s utility and links them to more info
+            about how to get started using it.
+          </div>
+        )}
+      </BodyWrapper>
+    )
+  }
+
   return (
     <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
@@ -166,15 +189,7 @@ export function NetworkAlert() {
         <Header>
           <Trans>Uniswap on {info.label}</Trans>
         </Header>
-        <Body>
-          <Trans>
-            Uniswap is now live on the Optimistic Ethereum (OΞ) network. Trade with low fees and nearly instant
-            transaction times on Layer 2. To get started, deposit assets from Ethereum to OΞ.
-          </Trans>{' '}
-          <ReadMoreLink href="https://help.uniswap.org/en/collections/3033942-layer-2">
-            <Trans>Learn how</Trans>
-          </ReadMoreLink>
-        </Body>
+        <Body />
       </ContentWrapper>
       <LinkOutToBridge href={depositUrl}>
         <Trans>Deposit to {info.label}</Trans>

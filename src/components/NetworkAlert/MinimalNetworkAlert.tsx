@@ -116,7 +116,7 @@ export function MinimalNetworkAlert() {
           Uniswap is now live on the Optimistic Ethereum (OΞ) network. Trade with low fees and nearly instant
           transaction times on Layer 2. To get started, deposit assets from Ethereum to OΞ.
         </Trans>{' '}
-        <ReadMoreLink href="https://help.uniswap.org/en/collections/3033942-layer-2">
+        <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
           <Trans>Learn how</Trans>
         </ReadMoreLink>
       </Body>
