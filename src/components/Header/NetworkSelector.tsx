@@ -39,36 +39,37 @@ const ActiveRowWrapper = styled.div`
   width: 100%;
 `
 const FlyoutHeader = styled.div`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text1};
   font-weight: 400;
   padding: 4px 8px 4px 8px;
 `
 const FlyoutMenu = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
   align-items: flex-start;
   background-color: ${({ theme }) => theme.bg1};
   border: 1px solid ${({ theme }) => theme.bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 20px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   overflow: auto;
   padding: 8px;
-  width: 78%;
   z-index: 99;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    left: unset;
+  left: 0px;
+  position: absolute;
+  top: 3rem;
+  min-width: 275px;
+  height: fit-content;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    top: unset;
     position: absolute;
-    top: 50px;
-    transform: unset;
-    width: 272px;
-  }
+    bottom: 4rem;
+    left: 1rem;
+  `};
+
   & > *:not(:last-child) {
     margin-bottom: 8px;
   }
@@ -149,6 +150,11 @@ const SelectorWrapper = styled.div`
 
 const StyledChevronDown = styled(ChevronDown)`
   width: 20px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+     transform: rotate(180deg);
+
+  `};
 `
 const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
   switch (chainId) {

@@ -27,7 +27,8 @@ import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: 120px 1fr 72px 48px;
+  grid-gap: 8px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
@@ -47,17 +48,17 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 48px 1fr 1fr;
+    grid-template-columns: 48px 1fr 72px 48px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 48px 1fr 48px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding:  1rem;
-    grid-template-columns: 36px 1fr;
+    grid-template-columns: 48px 1fr 48px;
   `};
 `
 
@@ -66,6 +67,21 @@ const HeaderControls = styled.div`
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: row;
+    justify-content: space-between;
+    justify-self: center;
+    z-index: 99;
+    position: fixed;
+    bottom: 0px; left: 0px;
+    background-color: ${({ theme }) => theme.bg0};
+    padding: 1rem;
+    border-radius: 12px 12px 0 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+  `};
 `
 
 const HeaderElement = styled.div`
@@ -103,19 +119,6 @@ const HeaderLinks = styled(Row)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
   `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
-    z-index: 99;
-    position: fixed;
-    bottom: 0; right: 50%;
-    transform: translate(50%,-50%);
-    margin: 0 auto;
-    background-color: ${({ theme }) => theme.bg0};
-    border: 1px solid ${({ theme }) => theme.bg2};
-    box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
-  `};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -125,7 +128,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
   border-radius: 12px;
   white-space: nowrap;
-  width: 100%;
+  /* width: 100%; */
   cursor: pointer;
 
   :focus {
@@ -158,7 +161,7 @@ const UNIWrapper = styled.span`
 
 const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
+    // display: none;
   `};
 `
 
@@ -241,6 +244,10 @@ const StyledExternalLink = styled(ExternalLink).attrs({
     color: ${({ theme }) => darken(0.1, theme.text1)};
     text-decoration: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 export default function Header() {
@@ -330,10 +337,8 @@ export default function Header() {
             <Web3Status />
           </AccountElement>
         </HeaderElement>
-        <HeaderElement>
-          <Menu />
-        </HeaderElement>
       </HeaderControls>
+      <Menu />
     </HeaderFrame>
   )
 }

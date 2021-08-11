@@ -105,11 +105,11 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
       : css`
           left: 0rem;
         `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
-  `};
+  /* ${({ theme }) => theme.mediaWidth.upToMedium`
+    bottom: 4rem;
+
+    top: unset
+  `}; */
 `
 
 const MenuItem = styled(ExternalLink)`
