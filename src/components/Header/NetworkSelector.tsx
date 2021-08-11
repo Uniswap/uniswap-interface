@@ -21,27 +21,27 @@ const ActiveRowLinkList = styled.div`
     color: ${({ theme }) => theme.text2};
     display: flex;
     flex-direction: row;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     justify-content: space-between;
-    padding: 8px 0 4px;
+    padding: 8px 4px;
     text-decoration: none;
+    margin: 4px 0;
   }
   & > a:first-child {
-    border-top: 1px solid ${({ theme }) => theme.text2};
     margin: 0;
   }
 `
 const ActiveRowWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  padding: 8px 0 8px 0;
   width: 100%;
 `
 const FlyoutHeader = styled.div`
   color: ${({ theme }) => theme.text2};
   font-weight: 400;
+  padding: 4px 8px 4px 8px;
 `
 const FlyoutMenu = styled.div`
   position: fixed;
@@ -51,6 +51,7 @@ const FlyoutMenu = styled.div`
 
   align-items: flex-start;
   background-color: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
@@ -58,7 +59,7 @@ const FlyoutMenu = styled.div`
   flex-direction: column;
   font-size: 16px;
   overflow: auto;
-  padding: 16px;
+  padding: 8px;
   width: 78%;
   z-index: 99;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
@@ -69,26 +70,30 @@ const FlyoutMenu = styled.div`
     width: 272px;
   }
   & > *:not(:last-child) {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 `
 const FlyoutRow = styled.div<{ active: boolean }>`
   align-items: center;
   background-color: ${({ active, theme }) => (active ? theme.bg2 : 'transparent')};
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   font-weight: 500;
   justify-content: space-between;
-  padding: 6px 8px;
+  padding: 12px 16px 12px 12px;
   text-align: left;
   width: 100%;
+
+  :hover {
+    background-color: ${({ active, theme }) => (active ? theme.bg2 : theme.bg2)};
+  }
 `
 const FlyoutRowActiveIndicator = styled.div`
   background-color: ${({ theme }) => theme.green1};
   border-radius: 50%;
-  height: 9px;
-  width: 9px;
+  height: 8px;
+  width: 8px;
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
@@ -112,15 +117,23 @@ const SelectorLabel = styled(NetworkLabel)`
 `
 const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg1};
-  border: 2px solid ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg0};
   border-radius: 12px;
   color: ${({ theme }) => theme.text1};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
-  padding: 6px 8px;
+  padding: 4px 8px;
+  height: 38px;
+  border: 1px solid transparent;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.bg3};
+  }
 `
 const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
   margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
@@ -133,16 +146,9 @@ const SelectorWrapper = styled.div`
     position: relative;
   }
 `
-const StyledClose = styled(X)`
-  cursor: pointer;
-  position: absolute;
-  height: 20px;
-  right: 20px;
-  top: 20px;
-  width: 20px;
-`
+
 const StyledChevronDown = styled(ChevronDown)`
-  width: 12px;
+  width: 20px;
 `
 const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
   switch (chainId) {
@@ -225,7 +231,7 @@ export default function NetworkSelector() {
               href="https://help.uniswap.org/en/collections/3033942-layer-2
 https://help.uniswap.org/en/collections/3033942-layer-2"
             >
-              <Trans>Help Center</Trans> <LinkOutCircle />
+              <Trans>Help & Guides</Trans> <LinkOutCircle />
             </ExternalLink>
           </ActiveRowLinkList>
         </ActiveRowWrapper>
@@ -243,7 +249,6 @@ https://help.uniswap.org/en/collections/3033942-layer-2"
       </SelectorControls>
       {open && (
         <FlyoutMenu>
-          <StyledClose onClick={toggle} />
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>
