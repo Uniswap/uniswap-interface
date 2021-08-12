@@ -54,6 +54,7 @@ export interface L1ChainInfo {
   readonly label: string
   readonly shortLabel?: string
   readonly logoUrl?: string
+  readonly color?: string
   readonly rpcUrls?: string[]
   readonly nativeCurrency: {
     name: string // 'Goerli ETH',
@@ -90,6 +91,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://rinkeby-explorer.arbitrum.io/#/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum Rinkeby',
+    color: '#EFC35C',
     logoUrl: arbitrumLogoUrl,
     nativeCurrency: { name: 'Rinkeby ArbETH', symbol: 'rinkArbETH', decimals: 18 },
     rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
@@ -107,6 +109,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
+    color: '#EFC35C',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
   },
   [SupportedChainId.ROPSTEN]: {
@@ -114,6 +117,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ropsten',
+    color: '#EC5A8D',
     nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
   },
   [SupportedChainId.KOVAN]: {
@@ -121,6 +125,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Kovan',
+    color: '#876CF6',
     nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
   },
   [SupportedChainId.GOERLI]: {
@@ -128,6 +133,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
+    color: '#4D9AEB',
     nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
   },
   [SupportedChainId.OPTIMISM]: {
@@ -147,6 +153,8 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimistic Kovan',
+    shortLabel: `OΞ Kovan`,
+    color: '#876CF6',
     rpcUrls: ['https://kovan.optimism.io'],
     logoUrl: optimismLogoUrl,
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },

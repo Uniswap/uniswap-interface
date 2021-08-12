@@ -115,11 +115,11 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const SelectorControls = styled.div<{ interactive: boolean; color?: string }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme, color }) => (color ? color + '20' : theme.bg0)};
   border-radius: 12px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme, color }) => (color ? color : theme.text1)};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
@@ -247,7 +247,7 @@ https://help.uniswap.org/en/collections/3033942-layer-2"
 
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
+      <SelectorControls color={info.color} onClick={conditionalToggle} interactive={showSelector}>
         <SelectorLogo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
         <SelectorLabel>{info.shortLabel ? info.shortLabel : info.label}</SelectorLabel>
         {showSelector && <StyledChevronDown />}
