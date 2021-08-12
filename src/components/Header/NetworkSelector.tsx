@@ -112,7 +112,7 @@ const SelectorLabel = styled(NetworkLabel)`
   display: none;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     display: block;
-    margin-right: 8px;
+    margin-right: 4px;
   }
 `
 const SelectorControls = styled.div<{ interactive: boolean; color?: string }>`
@@ -149,7 +149,6 @@ const SelectorWrapper = styled.div`
 
 const StyledChevronDown = styled(ChevronDown)`
   width: 20px;
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
      transform: rotate(180deg);
 
