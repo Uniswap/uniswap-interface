@@ -7,10 +7,9 @@ import {
 } from 'components/NetworkAlert/NetworkAlert'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { MEDIA_WIDTHS } from 'theme'
 import { ReadMoreLink } from './styles'
 
 const L2Icon = styled.img`
@@ -18,12 +17,6 @@ const L2Icon = styled.img`
   height: 40px;
   margin: auto 20px auto 4px;
   width: 40px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: block;
-  }
-`
-const DesktopTextBreak = styled.div`
-  display: none;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     display: block;
   }
@@ -40,6 +33,8 @@ const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; log
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  max-width: 880px;
   overflow: hidden;
   padding: 12px;
   position: relative;
@@ -63,7 +58,7 @@ const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; log
   }
 `
 const Body = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   line-height: 143%;
   margin: 12px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
@@ -71,36 +66,7 @@ const Body = styled.div`
     margin: auto 0;
   }
 `
-const LinkOutCircle = styled(ArrowDownCircle)`
-  transform: rotate(230deg);
-  width: 20px;
-  height: 20px;
-  margin-left: 12px;
-`
-const LinkOutToBridge = styled(ExternalLink)`
-  align-items: center;
-  background-color: black;
-  border-radius: 16px;
-  color: white;
-  display: flex;
-  font-size: 14px;
-  justify-content: space-between;
-  margin: 0;
-  max-height: 47px;
-  padding: 16px 12px;
-  text-decoration: none;
-  width: auto;
-  :hover,
-  :focus,
-  :active {
-    background-color: black;
-  }
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    margin: auto 0 auto auto;
-    padding: 14px 16px;
-    min-width: 226px;
-  }
-`
+
 export function AddLiquidityNetworkAlert() {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
@@ -110,23 +76,21 @@ export function AddLiquidityNetworkAlert() {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-    ? `${info.bridge}?chainId=1`
-    : info.bridge
+
   return (
     <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
-      <L2Icon src={info.logoUrl} />
-      <Body>
-        <Trans>This is an alpha release of Uniswap on the {info.label} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>{' '}
-        <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
-          <Trans>Read more</Trans>
-        </ReadMoreLink>
-      </Body>
-      <LinkOutToBridge href={depositUrl}>
-        <Trans>Deposit to {info.label}</Trans>
-        <LinkOutCircle />
-      </LinkOutToBridge>
+      <span style={{ display: 'flex' }}>
+        <L2Icon src={info.logoUrl} />
+        <Body>
+          <Trans>
+            {`You're adding liquidity using the ${info.label} L2 network. Make sure you have assets on the correct network.`}{' '}
+            <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+              <Trans>Learn how</Trans>
+            </ReadMoreLink>
+            {` to deposit assets from Ethereum to ${info.shortLabel}.`}
+          </Trans>{' '}
+        </Body>
+      </span>
     </Wrapper>
   )
 }

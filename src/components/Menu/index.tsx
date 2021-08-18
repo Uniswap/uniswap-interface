@@ -73,7 +73,6 @@ const UNIbutton = styled(ButtonPrimary)`
 `
 
 const StyledMenu = styled.div`
-  margin-left: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -107,11 +106,6 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
       : css`
           left: 0rem;
         `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
-  `};
 `
 
 const MenuItem = styled(ExternalLink)`

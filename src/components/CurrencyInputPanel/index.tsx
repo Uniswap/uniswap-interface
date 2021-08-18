@@ -9,7 +9,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { ButtonGray } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
-import { TYPE } from '../../theme'
+import { TYPE, HideSmall } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -239,7 +239,11 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <Trans>Select a token</Trans>}
+                      : currency?.symbol) || (
+                      <Trans>
+                        Select <HideSmall>a token</HideSmall>
+                      </Trans>
+                    )}
                   </StyledTokenName>
                 )}
               </RowFixed>

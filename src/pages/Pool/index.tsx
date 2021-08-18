@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { HideSmall, TYPE } from 'theme'
+import { TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
@@ -41,22 +41,21 @@ const TitleRow = styled(RowBetween)`
   `};
 `
 const ButtonRow = styled(RowFixed)`
-  & > *:not(:last-child) {
-    margin-left: 8px;
-  }
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
-    flex-direction: row-reverse;
+    flex-direction: column-reverse;
+    a {
+    padding: 12px 8px;
+  }
   `};
 `
 const Menu = styled(NewMenu)`
   margin-left: 0;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex: 1 1 auto;
-    width: 49%;
+    width: 100%;
     right: 0px;
   `};
 
@@ -77,7 +76,15 @@ const MoreOptionsButton = styled(ButtonGray)`
   padding: 6px 8px;
   width: 100%;
   background-color: ${({ theme }) => theme.bg0};
+  height: 38px;
   margin-right: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-top: 8px;
+    padding: 12px 8px;
+    height: unset;
+    margin-right: 0px;
+  `};
 `
 const NoLiquidity = styled.div`
   align-items: center;
@@ -92,6 +99,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
+  white-space: nowrap;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex: 1 1 auto;
     width: 100%;
@@ -100,29 +108,10 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg0};
-  padding: 8px;
+  padding: 12px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-`
-
-const ShowInactiveToggle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-items: end;
-  grid-column-gap: 4px;
-  padding: 0 8px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 12px;
-  `};
-`
-
-const ResponsiveRow = styled(RowFixed)`
-  justify-content: space-between;
-  width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: column-reverse;
-  `};
 `
 
 export default function Pool() {
@@ -130,7 +119,7 @@ export default function Pool() {
   const toggleWalletModal = useWalletModalToggle()
 
   const theme = useContext(ThemeContext)
-  const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
+  const [userHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
@@ -194,35 +183,41 @@ export default function Pool() {
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
+          <AutoColumn gap="md" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <TYPE.body fontSize={'20px'}>
                 <Trans>Pools Overview</Trans>
               </TYPE.body>
               <ButtonRow>
                 {showV2Features && (
-                  <Menu
-                    menuItems={menuItems}
-                    flyoutAlignment={FlyoutAlignment.LEFT}
-                    ToggleUI={(props: any) => (
-                      <MoreOptionsButton {...props}>
-                        <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                          <Trans>More</Trans>
-                          <ChevronDown size={15} />
-                        </TYPE.body>
-                      </MoreOptionsButton>
-                    )}
-                  />
+                  <>
+                    <Menu
+                      menuItems={menuItems}
+                      flyoutAlignment={FlyoutAlignment.LEFT}
+                      ToggleUI={(props: any) => (
+                        <MoreOptionsButton {...props}>
+                          <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                            <Trans>More</Trans>
+                            <ChevronDown size={15} />
+                          </TYPE.body>
+                        </MoreOptionsButton>
+                      )}
+                    />
+                    <MoreOptionsButton as={Link} to="/pool/v2" id="import-pool-link">
+                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                        <Trans>V2 Liquidity</Trans>
+                      </TYPE.body>
+                    </MoreOptionsButton>
+                  </>
                 )}
+
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New Position</Trans>
+                  <Trans>New Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
 
-            <HideSmall>
-              <CTACards />
-            </HideSmall>
+            <CTACards />
 
             <MainContentWrapper>
               {positionsLoading ? (
@@ -258,61 +253,6 @@ export default function Pool() {
                 </NoLiquidity>
               )}
             </MainContentWrapper>
-
-            <ResponsiveRow>
-              {showV2Features && (
-                <RowFixed>
-                  <ButtonOutlined
-                    as={Link}
-                    to="/pool/v2"
-                    id="import-pool-link"
-                    style={{
-                      padding: '8px 16px',
-                      margin: '0 4px',
-                      borderRadius: '12px',
-                      width: 'fit-content',
-                      fontSize: '14px',
-                    }}
-                  >
-                    <Layers size={14} style={{ marginRight: '8px' }} />
-
-                    <Trans>View V2 Liquidity</Trans>
-                  </ButtonOutlined>
-                  {positions && positions.length > 0 && (
-                    <ButtonOutlined
-                      as={Link}
-                      to="/migrate/v2"
-                      id="import-pool-link"
-                      style={{
-                        padding: '8px 16px',
-                        margin: '0 4px',
-                        borderRadius: '12px',
-                        width: 'fit-content',
-                        fontSize: '14px',
-                      }}
-                    >
-                      <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-
-                      <Trans>Migrate Liquidity</Trans>
-                    </ButtonOutlined>
-                  )}
-                </RowFixed>
-              )}
-              {closedPositions.length > 0 ? (
-                <ShowInactiveToggle>
-                  <label>
-                    <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show closed positions</Trans>
-                    </TYPE.body>
-                  </label>
-                  <input
-                    type="checkbox"
-                    onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
-                    checked={!userHideClosedPositions}
-                  />
-                </ShowInactiveToggle>
-              ) : null}
-            </ResponsiveRow>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
