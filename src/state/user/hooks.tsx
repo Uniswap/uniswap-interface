@@ -1,6 +1,6 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS } from 'constants/chains'
+import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
@@ -24,8 +24,9 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserLegacyRouter,
   updateUserLocale,
-  updateUserSingleHopOnly,
+  updateUserShowAdvancedSwapDetails,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -105,19 +106,36 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
+export function useIsLegacyRouter(): [boolean, (userLegacyRouter: boolean) => void] {
+  const { chainId } = useActiveWeb3React()
+
   const dispatch = useAppDispatch()
 
-  const singleHopOnly = useAppSelector((state) => state.user.userSingleHopOnly)
+  const legacyRouter = useAppSelector((state) => state.user.userLegacyRouter)
 
-  const setSingleHopOnly = useCallback(
-    (newSingleHopOnly: boolean) => {
-      dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
+  const setLegacyRouter = useCallback(
+    (newLegacyRouter: boolean) => {
+      dispatch(updateUserLegacyRouter({ userLegacyRouter: newLegacyRouter }))
     },
     [dispatch]
   )
 
-  return [singleHopOnly, setSingleHopOnly]
+  return [legacyRouter || chainId !== SupportedChainId.MAINNET, setLegacyRouter]
+}
+
+export function useUserShowAdvancedSwapDetails(): [boolean, (userAdvancedSwapDetails: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const showAdvancedSwapDetails = useAppSelector((state) => state.user.userShowAdvancedSwapDetails)
+
+  const setUserShowAdvancedSwapDetails = useCallback(
+    (newShowAdvancedSwapDetails: boolean) => {
+      dispatch(updateUserShowAdvancedSwapDetails({ userShowAdvancedSwapDetails: newShowAdvancedSwapDetails }))
+    },
+    [dispatch]
+  )
+
+  return [showAdvancedSwapDetails, setUserShowAdvancedSwapDetails]
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

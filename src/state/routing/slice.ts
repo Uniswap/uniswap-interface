@@ -15,15 +15,27 @@ export interface GetQuoteResult {
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
   quoteId: string
-  routeEdges: {
+  route: {
+    address: string
+    amountIn?: string
+    amountOut?: string
     fee: string
-    id: string
-    inId: string
-    outId: string
-    percent: number
-    type: string
-  }[]
-  routeNodes: { chainId: number; id: string; symbol: string; type: string }[]
+    liquidity: string
+    sqrtRatioX96: string
+    tickCurrent: string
+    tokenIn: {
+      address: string
+      chainId: number
+      decimals: string | number
+      symbol?: string
+    }
+    tokenOut: {
+      address: string
+      chainId: number
+      decimals: string | number
+      symbol?: string
+    }
+  }[][]
   routeString: string
 }
 
@@ -46,7 +58,19 @@ export const routingApi = createApi({
         deadline?: string
       }
     >({
-      query: (args) => `quote?${qs.stringify(args)}`,
+      query: (args) => {
+        const { recipient, slippageTolerance, deadline, ...rest } = args
+
+        // API requires all three to be present
+        const recipientSpecific =
+          recipient && slippageTolerance && deadline ? { recipient, slippageTolerance, deadline } : {}
+
+        const queryParams = {
+          ...rest,
+          ...recipientSpecific,
+        }
+        return `quote?${qs.stringify(queryParams)}`
+      },
     }),
   }),
 })

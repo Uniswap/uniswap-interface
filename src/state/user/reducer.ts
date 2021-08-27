@@ -1,5 +1,6 @@
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { createReducer } from '@reduxjs/toolkit'
+import { SupportedLocale } from 'constants/locales'
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -8,17 +9,17 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateMatchesDarkMode,
-  updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
-  updateUserDeadline,
-  updateUserSingleHopOnly,
-  updateHideClosedPositions,
-  updateUserLocale,
   updateArbitrumAlphaAcknowledged,
+  updateHideClosedPositions,
+  updateMatchesDarkMode,
+  updateUserShowAdvancedSwapDetails as updateShowUserAdvancedSwapDetails,
+  updateUserDarkMode,
+  updateUserDeadline,
+  updateUserExpertMode,
+  updateUserLocale,
+  updateUserLegacyRouter,
+  updateUserSlippageTolerance,
 } from './actions'
-import { SupportedLocale } from 'constants/locales'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -35,7 +36,9 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  userSingleHopOnly: boolean // only allow swaps on direct pairs
+  userLegacyRouter: boolean // whether the user has disabled the routing API
+
+  userShowAdvancedSwapDetails: boolean // whether the user has toggled the advanced swap details
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -74,7 +77,8 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userLocale: null,
-  userSingleHopOnly: false,
+  userLegacyRouter: false,
+  userShowAdvancedSwapDetails: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -147,8 +151,11 @@ export default createReducer(initialState, (builder) =>
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserSingleHopOnly, (state, action) => {
-      state.userSingleHopOnly = action.payload.userSingleHopOnly
+    .addCase(updateUserLegacyRouter, (state, action) => {
+      state.userLegacyRouter = action.payload.userLegacyRouter
+    })
+    .addCase(updateShowUserAdvancedSwapDetails, (state, action) => {
+      state.userShowAdvancedSwapDetails = action.payload.userShowAdvancedSwapDetails
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
