@@ -1,4 +1,5 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
+import Stats from 'components/AccountDrawer/Stats'
 import { ENS } from 'components/Icons/ENS'
 import { EthMini } from 'components/Icons/EthMini'
 import StatusIcon from 'components/Identicon/StatusIcon'
@@ -140,6 +141,7 @@ export function Status({
         {(uniswapUsername || ensUsername) && (
           <SecondaryIdentifiers account={account} ensUsername={ensUsername} uniswapUsername={uniswapUsername} />
         )}
+        <Stats account={account} />
       </Identifiers>
     </Container>
   )
